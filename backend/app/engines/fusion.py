@@ -164,7 +164,9 @@ def _generate_fortune_template(bazi: dict, huangli: dict, astrology: dict) -> di
     # 以下代码从原 generate_fortune 的函数体移入
 
     day_master_wx = bazi.get("day_master_wuxing", "")
-    day_wx = huangli.get("day_wuxing", "")
+    # 黄历返回的日五行可能是天干、地支各一字（如“水水”），
+    # 取首字参与五行生克，避免字符串无法匹配导致评分落入默认值。
+    day_wx = huangli.get("day_wuxing", "")[:1]
     sun_element = astrology.get("element", "")
     sun_sign = astrology.get("sun_sign", "")
 
@@ -228,6 +230,22 @@ def _generate_fortune_template(bazi: dict, huangli: dict, astrology: dict) -> di
 
     advice = "；".join(advice_parts) if advice_parts else "顺其自然，保持好心情就是最好的运势。"
 
+    # 给用户可执行的下一步，避免报告只停留在抽象判断。
+    guidance = []
+    if wx_relation in {"生我", "比和"}:
+        guidance.append("把今天最重要的一件事放在上午完成，先行动再等待反馈。")
+    else:
+        guidance.append("今天适合收拢节奏，给重要决定留出一晚的观察时间。")
+    if career_score >= 7:
+        guidance.append("事业线适合主动沟通：约一次关键对话，或把卡住的任务拆成第一步。")
+    else:
+        guidance.append("工作上减少多线程切换，优先完成一个可交付的小结果。")
+    if wealth_score >= 7:
+        guidance.append("财运有流动空间，但先确认边界和预算，再做任何支出或投资。")
+    else:
+        guidance.append("财务上采用‘延迟购买’原则，今天不为情绪性消费买单。")
+    guidance.append("留出二十分钟不被打扰的时间，让身体和注意力重新归位。")
+
     return {
         "overall_score": overall_score,
         "overall_text": overall_text,
@@ -237,6 +255,7 @@ def _generate_fortune_template(bazi: dict, huangli: dict, astrology: dict) -> di
         "health": {"score": health_score, "text": health_text},
         "lucky": lucky,
         "advice": advice,
+        "guidance": guidance,
     }
 
 
