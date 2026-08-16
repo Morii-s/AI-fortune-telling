@@ -120,23 +120,23 @@ SYSTEM_PROMPT = """你是一位精通中国传统命理学（八字、五行、�
 返回一个严格的 JSON 对象（不要 markdown 代码块，不要任何额外文字）：
 
 {
-  "overall_score": 整数 1-10,
+  "overall_score": 整数 0-100，必须是结合八字、当日干支和星座元素后的确定性整数，不得使用 1-10 或小数，
   "overall_text": "2-4句话的综合解读。先讲八字层面（今日干支与日主关系、十神影响），再讲星座层面（太阳/上升星座的今日能量），最后做中西融合总结。语气像朋友聊天，有温度，不要机械罗列数据。",
   "love": {
-    "score": 整数 1-10,
+    "score": 整数 0-100,
     "text": "1-2句话。结合十神中的正财/偏财/食神分析感情运，结合金星和月亮星座的情感倾向，如有黄历宜忌关联则加上建议。"
   },
   "career": {
-    "score": 整数 1-10,
+    "score": 整数 0-100,
     "text": "1-2句话。结合十神中的正官/七杀/比肩分析事业运，结合太阳星座的行动力和上升星座的社交表现，参考黄历宜忌给出行动建议。"
   },
   "wealth": {
-    "score": 整数 1-10,
+    "score": 整数 0-100,
     "text": "1-2句话。结合十神中的正财/偏财分析财运，结合土象星座的稳定性和黄历财神方位，给出理财建议。"
   },
   "health": {
-    "score": 整数 1-10,
-    "text": "1-2句话。结合日主五行旺衰判断身体状况，结合月亮星座的情绪影响，如有冲煞或彭祖百忌相关则提醒。"
+    "score": 整数 0-100,
+    "text": "1-2句话。只用传统文化语言提示当天宜松宜紧的生活节奏，不评价身体状况，不引用健康原始指标。"
   },
   "lucky": {
     "color": "基于日主五行的幸运色，如'白色、金色'",
@@ -144,6 +144,14 @@ SYSTEM_PROMPT = """你是一位精通中国传统命理学（八字、五行、�
     "direction": "基于日主五行方位+黄历吉方的幸运方位，如'西方'"
   },
   "advice": "1-2句话的今日核心建议。必须同时引用八字分析结论、星座能量提示、黄历宜忌中的至少两项，给出一个具体的、可执行的行动建议。不要泛泛而谈。"
+  ,"analysis": {
+    "disclaimer": "这是传统文化与自我反思视角，不构成事实预测、医疗或财务建议。",
+    "bazi": {"title": "八字与五行", "summary": "80-140字，明确引用日主、今日干支、五行生克和至少一个十神依据。", "evidence": ["3-5条，每条40-90字，必须引用输入中的具体干支、五行、十神或纳音，不得凭空添加。"], "guidance": "80-140字，把八字依据转成今天一个具体行动。"},
+    "meihua": {"title": "梅花易数·今日取象", "summary": "80-140字，说明取数依据、卦象/动静/时机的文化性解读。", "evidence": ["3-5条，说明取数和象意如何支持结论；若没有完整卦盘，必须明确写‘简化取象’，不得虚构卦名。"], "guidance": "80-140字，给出一个可验证的小行动。"},
+    "fengshui": {"title": "黄历与空间提醒", "summary": "80-140字，结合宜忌、冲煞、吉神方位或彭祖百忌。", "evidence": ["3-5条，逐条引用黄历输入中的实际内容。"], "guidance": "80-140字，给出不迷信、可执行的环境或日程调整。"},
+    "astrology": {"title": "星座与星盘视角", "summary": "80-140字，结合太阳、月亮、上升、元素、守护星等实际输入。", "evidence": ["3-5条，说明每个星体/元素只是性格与情绪观察框架，不得假装计算未提供的行星位置。"], "guidance": "80-140字，给出一条沟通或情绪觉察行动。"},
+    "wellbeing": {"title": "今日节奏建议", "summary": "60-100字，只根据健康汇总给出休息、活动、专注和恢复安排；无数据时说明未同步。", "evidence": ["1-3条，不展示原始数值，只说明建议使用了睡眠、活动或恢复汇总。"], "guidance": "60-100字，给出温和、具体、可执行的生活方式建议，不作诊断。"}
+  }
 }
 
 ═══════════════════════════════════════
@@ -154,11 +162,16 @@ SYSTEM_PROMPT = """你是一位精通中国传统命理学（八字、五行、�
 - 每个分析要点都要有"为什么"——不只是说"运势好"，要说"因为今日丙火生扶你的戊土日主，所以…"
 - 中西之间要有连接：比如"你的日主是辛金，今日丙戌日，丙火克辛金为『正官』，代表事业上可能有压力——同时你的太阳星座是巨蟹（水象），水象的敏感会放大这种压力感，所以今天…"
 - 幸运建议必须有依据，不能凭空编造
+- analysis 四个章节必须详细、具体、有证据；不要把同一句话重复到不同章节
+- 梅花易数若没有完整起卦参数，只能做“简化取象”，严禁虚构卦名、爻辞或精确预测
+- 详细内容要让用户能看懂“为什么得出这个建议”，每条 evidence 都必须引用输入数据
+- 健康汇总与风水的结合只能落在 wellbeing：把黄历的“宜忌”、整理空间、采光、减少干扰等作为日程和环境灵感，再用睡眠/活动/恢复汇总决定建议偏向推进、走动还是留白；两者不存在医学或因果关系，不能宣称风水改善健康。
+- 健康数据不是命理依据：不得用健康指标反推五行、八字旺衰、星盘状态或吉凶，也不得将命理结论表达为健康结论。
 - 只返回 JSON，不要任何其他文字
 """
 
 
-async def generate_ai_fortune(bazi: dict, huangli: dict, astrology: dict) -> Optional[dict]:
+async def generate_ai_fortune(bazi: dict, huangli: dict, astrology: dict, health_summary: Optional[dict] = None) -> Optional[dict]:
     """调用 DeepSeek API 生成运势解读"""
     user_prompt = f"""请分析以下数据并生成今日运势：
 
@@ -188,6 +201,12 @@ async def generate_ai_fortune(bazi: dict, huangli: dict, astrology: dict) -> Opt
 - 元素: {astrology.get('element')}
 - 性质: {astrology.get('quality')}
 - 守护星: {astrology.get('ruling_planet')}
+
+【今日健康汇总（仅用于生活方式建议，不作医疗判断）】
+- 数据: {json.dumps(health_summary or {}, ensure_ascii=False)}
+- 健康数据只能用于 analysis.wellbeing（“今日节奏建议”）这一独立章节：根据睡眠、活动和恢复汇总给出温和、可执行的休息、走动、专注和恢复安排。
+- 严禁把步数、睡眠小时、静息心率、HRV、活动能量等原始数值放入 analysis.bazi、analysis.meihua、analysis.fengshui 或 analysis.astrology 的 evidence/summary；这些章节只解释命理、黄历和星盘本身。
+- 不得诊断疾病、推断病因、评价指标正常异常或建议停药；如果用户描述不适，只建议咨询专业人士。
 """
 
     try:
@@ -205,7 +224,7 @@ async def generate_ai_fortune(bazi: dict, huangli: dict, astrology: dict) -> Opt
                         {"role": "user", "content": user_prompt},
                     ],
                     "temperature": 0.8,
-                    "max_tokens": 1500,
+                    "max_tokens": 3200,
                 },
             )
             resp.raise_for_status()
@@ -221,7 +240,7 @@ async def generate_ai_fortune(bazi: dict, huangli: dict, astrology: dict) -> Opt
             result = json.loads(content)
 
             # 验证必需字段
-            required = ["overall_score", "overall_text", "love", "career", "wealth", "health", "lucky", "advice"]
+            required = ["overall_score", "overall_text", "love", "career", "wealth", "health", "lucky", "advice", "analysis"]
             for field in required:
                 if field not in result:
                     return None  # 返回 None 触发 fallback

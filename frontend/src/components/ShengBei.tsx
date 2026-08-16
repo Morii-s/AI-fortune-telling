@@ -1,274 +1,53 @@
-import { useRef, useEffect, useCallback, useState } from 'react';
-
-/* ═══════════════════════════════════════════════
-   圣杯 Canvas — 3D 月牙形渲染 + 物理引擎
-   模拟两块筊杯的木制抛掷
-   ═══════════════════════════════════════════════ */
-
-const W = 340, H = 300;
-const GROUND = H - 50;
-const BLOCK_W = 44, BLOCK_H = 76;
-
-type Block = {
-  x: number; y: number;
-  vx: number; vy: number;
-  rot: number; av: number;
-  settled: boolean;
-};
+import { useEffect, useRef, useState } from 'react';
+import { ArrowUp, Dices } from 'lucide-react';
+import * as THREE from 'three';
+import * as CANNON from 'cannon-es';
 
 type Result = 'sheng' | 'yin' | 'xiao' | null;
-
-const RESULT_LABELS: Record<string, { title: string; desc: string; color: string }> = {
-  sheng: { title: '圣杯', desc: '一平一凸 · 神明应允', color: '#059669' },
-  yin:   { title: '阴杯', desc: '两面皆凸 · 神明不允', color: '#C4463A' },
-  xiao:  { title: '笑杯', desc: '两面皆平 · 笑而不答', color: '#C9A050' },
+const RESULT_LABELS: Record<Exclude<Result, null>, { title: string; desc: string }> = {
+  sheng: { title: '圣杯', desc: '一平一凸 · 神明应允' }, yin: { title: '阴杯', desc: '两面皆凸 · 神明不允' }, xiao: { title: '笑杯', desc: '两面皆平 · 笑而不答' },
 };
 
-/* ── 绘制月牙形筊杯 (crescent moon block) ── */
-function drawCrescentBlock(
-  ctx: CanvasRenderingContext2D,
-  x: number, y: number, w: number, h: number, rot: number,
-  flatUp: boolean // true = flat face visible, false = convex face visible
-) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(rot);
-
-  const hw = w / 2, hh = h / 2;
-
-  // ── Crescent shape: flat on one side, curved on the other ──
-  ctx.beginPath();
-  if (flatUp) {
-    // Flat side facing up — we see the flat face
-    ctx.moveTo(-hw, -hh * 0.1);
-    ctx.lineTo(hw, -hh * 0.1);
-    // Curved bottom (convex back)
-    ctx.quadraticCurveTo(hw + 6, 0, hw, hh * 0.9);
-    ctx.quadraticCurveTo(0, hh + 2, -hw, hh * 0.9);
-    ctx.quadraticCurveTo(-hw - 6, 0, -hw, -hh * 0.1);
-  } else {
-    // Convex side facing up — rounded top, flat bottom
-    ctx.moveTo(-hw, hh * 0.1);
-    ctx.quadraticCurveTo(-hw - 6, 0, -hw, -hh * 0.9);
-    ctx.quadraticCurveTo(0, -hh - 3, hw, -hh * 0.9);
-    ctx.quadraticCurveTo(hw + 6, 0, hw, hh * 0.1);
-    ctx.lineTo(-hw, hh * 0.1);
-  }
-  ctx.closePath();
-
-  // ── 3D wood gradient ──
-  const grad = ctx.createLinearGradient(0, -hh, 0, hh);
-  if (flatUp) {
-    // Flat face: lighter matte wood with subtle grain
-    grad.addColorStop(0, '#f2dfb0');
-    grad.addColorStop(0.2, '#e8cc8a');
-    grad.addColorStop(0.5, '#d4a84c');
-    grad.addColorStop(0.8, '#b8862c');
-    grad.addColorStop(1, '#8b5e14');
-  } else {
-    // Convex face: curved highlight, darker sides for 3D depth
-    grad.addColorStop(0, '#ecd48a');
-    grad.addColorStop(0.15, '#d4a840');
-    grad.addColorStop(0.35, '#c09030');
-    grad.addColorStop(0.55, '#d4a840');
-    grad.addColorStop(0.75, '#a06818');
-    grad.addColorStop(1, '#603810');
-  }
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // ── Wood grain lines ──
-  ctx.save();
-  ctx.clip();
-  ctx.strokeStyle = 'rgba(0,0,0,0.06)';
-  ctx.lineWidth = 0.7;
-  for (let i = -hh; i < hh; i += 6) {
-    const cy = i + Math.sin(i * 0.4) * 2;
-    ctx.beginPath();
-    ctx.moveTo(-hw - 2, cy);
-    ctx.quadraticCurveTo(0, cy + Math.sin(i * 0.5) * 1.5, hw + 2, cy);
-    ctx.stroke();
-  }
-
-  // ── Edge highlight (top ridge) ──
-  if (!flatUp) {
-    ctx.beginPath();
-    ctx.moveTo(-hw * 0.6, -hh + 8);
-    ctx.quadraticCurveTo(0, -hh + 2, hw * 0.6, -hh + 8);
-    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
-
-  ctx.restore();
-
-  // ── Dark edge outline ──
-  ctx.strokeStyle = 'rgba(0,0,0,0.22)';
-  ctx.lineWidth = 0.9;
-  ctx.stroke();
-
-  // ── Rim highlight (flat face edge) ──
-  if (flatUp) {
-    ctx.beginPath();
-    ctx.moveTo(-hw, -hh * 0.1);
-    ctx.lineTo(hw, -hh * 0.1);
-    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-  }
-
-  ctx.restore();
+function makeCupGeometry() {
+  const shape = new THREE.Shape();
+  // A traditional jiaobei silhouette: two sharp tips, a convex outer back,
+  // and a concave inner face where the paired cups meet.
+  shape.moveTo(0, -0.86);
+  shape.quadraticCurveTo(0.92, -0.68, 0.98, 0);
+  shape.quadraticCurveTo(0.92, 0.68, 0, 0.86);
+  shape.quadraticCurveTo(0.38, 0.45, 0.42, 0);
+  shape.quadraticCurveTo(0.38, -0.45, 0, -0.86);
+  return new THREE.ExtrudeGeometry(shape, { depth: 0.24, bevelEnabled: true, bevelSegments: 4, bevelSize: 0.045, bevelThickness: 0.055, curveSegments: 24 });
 }
 
 export default function ShengBei() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const blocksRef = useRef<[Block, Block]>([
-    { x: W * 0.35, y: GROUND, vx: 0, vy: 0, rot: 0, av: 0, settled: true },
-    { x: W * 0.65, y: GROUND, vx: 0, vy: 0, rot: 0, av: 0, settled: true },
-  ]);
-  const animRef = useRef(0);
-  const rafRef = useRef(0);
-  const [result, setResult] = useState<Result>(null);
-
-  const physicsTick = useCallback(() => {
-    const [b1, b2] = blocksRef.current;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let allSettled = true;
-
-    for (const b of [b1, b2]) {
-      if (b.settled) continue;
-      allSettled = false;
-
-      // Gravity
-      b.vy += 0.6;
-      // Air friction on rotation
-      b.av *= 0.994;
-      // Move
-      b.y += b.vy;
-      b.x += b.vx;
-      b.rot += b.av;
-
-      // Wall bounce
-      if (b.x < BLOCK_W / 2 + 8) { b.x = BLOCK_W / 2 + 8; b.vx *= -0.35; }
-      if (b.x > W - BLOCK_W / 2 - 8) { b.x = W - BLOCK_W / 2 - 8; b.vx *= -0.35; }
-
-      // Ground collision
-      if (b.y >= GROUND) {
-        b.y = GROUND;
-        if (Math.abs(b.vy) < 0.5 && Math.abs(b.av) < 0.012) {
-          b.vy = 0; b.vx = 0; b.av = 0; b.settled = true;
-          // Snap rotation to nearest facing
-          const mod = ((b.rot % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-          if (mod > Math.PI * 0.3 && mod < Math.PI * 0.7) b.rot = Math.PI * 0.5;
-          else if (mod > Math.PI * 1.3 && mod < Math.PI * 1.7) b.rot = Math.PI * 1.5;
-          else b.rot = 0;
-        } else {
-          b.vy *= -0.32;
-          b.av *= 0.55;
-          b.vx *= 0.65;
-          if (Math.abs(b.vy) < 2) b.av *= 0.45;
-        }
-      }
-    }
-
-    if (allSettled && b1.settled && b2.settled) {
-      cancelAnimationFrame(rafRef.current);
-      const f1 = ((b1.rot % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-      const f2 = ((b2.rot % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-      const b1flat = f1 < 0.1 || Math.abs(f1 - Math.PI * 2) < 0.1;
-      const b2flat = f2 < 0.1 || Math.abs(f2 - Math.PI * 2) < 0.1;
-      if (b1flat && b2flat) setResult('xiao');
-      else if (!b1flat && !b2flat) setResult('yin');
-      else setResult('sheng');
-      animRef.current = 0;
-    }
-
-    // ── Render ──
-    ctx.clearRect(0, 0, W, H);
-
-    // Ground shadow gradient
-    const shadowGrad = ctx.createLinearGradient(0, GROUND, 0, GROUND + 12);
-    shadowGrad.addColorStop(0, 'rgba(0,0,0,0.08)');
-    shadowGrad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = shadowGrad;
-    ctx.fillRect(16, GROUND, W - 32, 12);
-
-    // Ground line
-    ctx.strokeStyle = 'rgba(0,0,0,0.06)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(20, GROUND);
-    ctx.lineTo(W - 20, GROUND);
-    ctx.stroke();
-
-    const facing1 = ((b1.rot % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) < Math.PI;
-    const facing2 = ((b2.rot % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) < Math.PI;
-
-    // Drop shadows (elliptical)
-    ctx.fillStyle = 'rgba(0,0,0,0.12)';
-    ctx.beginPath();
-    ctx.ellipse(b1.x, GROUND + 3, BLOCK_W * 0.55, 4, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(b2.x, GROUND + 3, BLOCK_W * 0.55, 4, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    drawCrescentBlock(ctx, b1.x, b1.y, BLOCK_W, BLOCK_H, b1.rot, facing1);
-    drawCrescentBlock(ctx, b2.x, b2.y, BLOCK_W, BLOCK_H, b2.rot, facing2);
-  }, []);
-
-  const loop = useCallback(() => {
-    physicsTick();
-    if (animRef.current === 0) return;
-    rafRef.current = requestAnimationFrame(loop);
-  }, [physicsTick]);
+  const mountRef = useRef<HTMLDivElement>(null); const activeRef = useRef(false); const bodiesRef = useRef<CANNON.Body[]>([]); const frameRef = useRef(0); const resultRef = useRef<Result>(null); const facesRef = useRef<[boolean, boolean]>([false, false]); const settledAtRef = useRef(0);
+  const [result, setResult] = useState<Result>(null); const [rolling, setRolling] = useState(false);
 
   useEffect(() => {
-    physicsTick();
-  }, [physicsTick]);
+    const mount = mountRef.current; if (!mount) return;
+    const scene = new THREE.Scene(); scene.background = new THREE.Color(0x181a18);
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100); camera.position.set(0, 4.4, 7.8); camera.lookAt(0, 0, 0);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; mount.appendChild(renderer.domElement);
+    const ambient = new THREE.HemisphereLight(0xe7dfca, 0x151714, 2.1); scene.add(ambient);
+    const key = new THREE.DirectionalLight(0xf3d29a, 3.2); key.position.set(-3, 7, 4); key.castShadow = true; scene.add(key);
+    const rim = new THREE.PointLight(0x7d9a80, 2.2, 10); rim.position.set(3, 2, -2); scene.add(rim);
+    const floor = new THREE.Mesh(new THREE.CylinderGeometry(3.15, 3.15, 0.12, 64), new THREE.MeshStandardMaterial({ color: 0x242721, roughness: .82, metalness: .08 })); floor.position.y = -1.13; floor.receiveShadow = true; scene.add(floor);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(2.62, .012, 8, 96), new THREE.MeshBasicMaterial({ color: 0xb18d51, transparent: true, opacity: .55 })); ring.rotation.x = Math.PI / 2; ring.position.y = -1.05; scene.add(ring);
+    const geometry = makeCupGeometry(); geometry.center();
+    const cupMaterial = new THREE.MeshStandardMaterial({ color: 0x7b3024, roughness: .34, metalness: .12, emissive: 0x180604, emissiveIntensity: .28 });
+    const edgeMaterial = new THREE.MeshStandardMaterial({ color: 0xb76443, roughness: .28, metalness: .24, emissive: 0x250b06, emissiveIntensity: .2 });
+    const meshes = [0, 1].map((index) => { const mesh = new THREE.Mesh(geometry, [cupMaterial, edgeMaterial]); mesh.castShadow = true; mesh.receiveShadow = true; mesh.scale.set(index ? 1.0 : -1.0, 1.0, 1.0); mesh.position.set(index ? .92 : -.92, -.5, index ? -.06 : .08); mesh.rotation.set(index ? .18 : -.12, index ? -.2 : .14, index ? .2 : -.12); scene.add(mesh); return mesh; });
+    const world = new CANNON.World({ gravity: new CANNON.Vec3(0, -9.82, 0) }); world.broadphase = new CANNON.SAPBroadphase(world); world.allowSleep = true; world.defaultContactMaterial.friction = .58; world.defaultContactMaterial.restitution = .45;
+    const groundBody = new CANNON.Body({ mass: 0, shape: new CANNON.Plane() }); groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); groundBody.position.y = -1.08; world.addBody(groundBody);
+    const bodies = meshes.map((_, index) => { const body = new CANNON.Body({ mass: 1, shape: new CANNON.Box(new CANNON.Vec3(.34, .78, .14)), position: new CANNON.Vec3(index ? .92 : -.92, -.55, index ? -.06 : .08) }); body.linearDamping = .18; body.angularDamping = .15; body.allowSleep = true; world.addBody(body); return body; }); bodiesRef.current = bodies;
+    const resize = () => { const width = mount.clientWidth || 320; const height = mount.clientHeight || 300; camera.aspect = width / height; camera.updateProjectionMatrix(); renderer.setSize(width, height, false); }; resize(); const observer = new ResizeObserver(resize); observer.observe(mount);
+    let previous = performance.now();
+    const animate = (now: number) => { frameRef.current = requestAnimationFrame(animate); const dt = Math.min((now - previous) / 1000, .033); previous = now; if (activeRef.current) { world.step(1 / 60, dt, 3); bodies.forEach((body, index) => { meshes[index].position.copy(body.position as unknown as THREE.Vector3); meshes[index].quaternion.copy(body.quaternion as unknown as THREE.Quaternion); }); const sleeping = bodies.every((body) => body.sleepState === CANNON.Body.SLEEPING); if (sleeping && !settledAtRef.current) settledAtRef.current = now; if (settledAtRef.current && now - settledAtRef.current > 320) { activeRef.current = false; setRolling(false); const [first, second] = facesRef.current; const next: Result = first === second ? (first ? 'xiao' : 'yin') : 'sheng'; resultRef.current = next; setResult(next); } } renderer.render(scene, camera); }; frameRef.current = requestAnimationFrame(animate);
+    return () => { cancelAnimationFrame(frameRef.current); observer.disconnect(); geometry.dispose(); cupMaterial.dispose(); edgeMaterial.dispose(); renderer.dispose(); renderer.domElement.remove(); };
+  }, []);
 
-  const throwBei = useCallback(() => {
-    if (animRef.current === 1) return;
-    setResult(null);
-    blocksRef.current = [
-      { x: W * 0.35, y: GROUND, vx: -1.8 + Math.random() * 3.6, vy: -(7 + Math.random() * 6), rot: 0, av: 0.28 + Math.random() * 0.4, settled: false },
-      { x: W * 0.65, y: GROUND, vx: -1.8 + Math.random() * 3.6, vy: -(7 + Math.random() * 6), rot: 0, av: 0.28 + Math.random() * 0.4, settled: false },
-    ];
-    animRef.current = 1;
-    rafRef.current = requestAnimationFrame(loop);
-  }, [loop]);
+  const throwBei = () => { if (activeRef.current) return; const bodies = bodiesRef.current; if (!bodies.length) return; const [first, second] = bodies; settledAtRef.current = 0; facesRef.current = [Math.random() > .5, Math.random() > .5]; const resetBody = (body: CANNON.Body, x: number, z: number) => { body.wakeUp(); body.position.set(x, .15, z); body.velocity.set((Math.random() - .5) * 2.4, 4.3 + Math.random() * 1.8, (Math.random() - .5) * 1.8); body.angularVelocity.set((Math.random() - .5) * 7, (Math.random() - .5) * 7, (Math.random() - .5) * 7); body.quaternion.setFromEuler(0, 0, 0); }; resetBody(first, -.92, .08); resetBody(second, .92, -.06); setResult(null); resultRef.current = null; activeRef.current = true; setRolling(true); };
 
-  return (
-    <div className="flex flex-col items-center gap-4">
-      <h3 className="text-xs text-faint tracking-widest">掷 圣 杯</h3>
-
-      <canvas
-        ref={canvasRef}
-        width={W}
-        height={H}
-        style={{ width: W, height: H }}
-      />
-
-      {result && animRef.current === 0 && (
-        <div className="text-center space-y-1">
-          <p className="text-lg font-medium" style={{ color: RESULT_LABELS[result].color }}>
-            {RESULT_LABELS[result].title}
-          </p>
-          <p className="text-xs text-faint">{RESULT_LABELS[result].desc}</p>
-        </div>
-      )}
-
-      <button onClick={throwBei}
-        className="px-8 py-2.5 text-sm rounded-lg border border-gold/30 bg-panel text-soft
-                   hover:bg-gold/5 hover:border-gold/50 hover:text-gold
-                   active:scale-[0.98]
-                   transition-all duration-300 tracking-wider">
-        {animRef.current === 1 ? '掷杯中…' : result ? '再掷一次' : '掷杯'}
-      </button>
-    </div>
-  );
+  return <div className="shengbei-3d"><div className="three-stage" ref={mountRef} aria-label="3D 圣杯物理投掷场景" /><div className="shengbei-meta"><span className="eyebrow">CANNON / RITUAL 01</span><span className="physics-state"><i className={rolling ? 'live' : ''} /> {rolling ? 'PHYSICS ACTIVE' : 'READY TO THROW'}</span></div>{result && <div className="shengbei-result page-enter"><strong>{RESULT_LABELS[result].title}</strong><span>{RESULT_LABELS[result].desc}</span></div>}<button className="throw-button" onClick={throwBei} disabled={rolling}><Dices size={15} /> {rolling ? '正在落定' : result ? '再次投掷' : '投掷圣杯'} <ArrowUp size={14} /></button></div>;
 }

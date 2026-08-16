@@ -1,0 +1,33 @@
+name: OrbitHealth
+options:
+  bundleIdPrefix: com.orbit
+  deploymentTarget:
+    iOS: "18.0"
+targets:
+  OrbitHealth:
+    type: application
+    platform: iOS
+    sources: [OrbitHealth]
+    info:
+      path: OrbitHealth/Info.plist
+      properties:
+        LSRequiresIPhoneOS: true
+        UIRequiresFullScreen: true
+        UILaunchScreen: {}
+        NSHealthShareUsageDescription: "命轨会在你授权后读取今日步数、睡眠、活动和心率等汇总数据，用于生成生活建议。"
+        NSHealthUpdateUsageDescription: "命轨不会写入你的 Apple 健康数据。"
+        DEEPSEEK_API_KEY: "YOUR_DEEPSEEK_API_KEY"
+        DEEPSEEK_MODEL: "deepseek-chat"
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+    entitlements:
+      path: OrbitHealth/OrbitHealth.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.orbit.health
+      DEVELOPMENT_TEAM: V3UKHUP36V
+      CODE_SIGN_STYLE: Automatic
+      SWIFT_VERSION: 5.0
+      TARGETED_DEVICE_FAMILY: 1
+      SUPPORTS_MACCATALYST: false

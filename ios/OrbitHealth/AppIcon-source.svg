@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0c1820"/>
+      <stop offset="1" stop-color="#18292c"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe09a"/>
+      <stop offset="0.48" stop-color="#e5a744"/>
+      <stop offset="1" stop-color="#a9671e"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff1c7"/>
+      <stop offset="1" stop-color="#d9b873"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".42"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" rx="226" fill="url(#bg)"/>
+  <circle cx="512" cy="512" r="358" fill="none" stroke="#b77d32" stroke-width="3" opacity=".32"/>
+  <ellipse cx="512" cy="512" rx="375" ry="150" fill="none" stroke="url(#gold)" stroke-width="17" opacity=".9" transform="rotate(-28 512 512)"/>
+  <ellipse cx="512" cy="512" rx="375" ry="150" fill="none" stroke="#ffe1a1" stroke-width="4" opacity=".7" transform="rotate(-28 512 512)"/>
+  <circle cx="790" cy="325" r="18" fill="#ffe09a"/>
+  <g filter="url(#shadow)">
+    <path d="M330 705 L354 464 Q512 408 670 464 L694 705 Q512 790 330 705Z" fill="#6b3a1b" stroke="#c8842e" stroke-width="10"/>
+    <path d="M346 683 Q512 752 678 683" fill="none" stroke="#3d2112" stroke-width="28" stroke-linecap="round"/>
+    <ellipse cx="512" cy="468" rx="173" ry="48" fill="#24150e" stroke="#d8963d" stroke-width="13"/>
+    <ellipse cx="512" cy="468" rx="132" ry="31" fill="#090b0b"/>
+    <rect x="351" y="495" width="322" height="72" rx="14" fill="#a92f24"/>
+    <rect x="362" y="505" width="300" height="11" rx="5" fill="#e7a849" opacity=".78"/>
+    <path d="M465 244 L495 236 L548 472 L518 478Z" fill="url(#paper)" stroke="#8e5d24" stroke-width="6"/>
+    <path d="M514 221 L544 218 L568 470 L538 473Z" fill="#d48b32" stroke="#8e5d24" stroke-width="6"/>
+    <path d="M563 260 L592 266 L588 469 L559 469Z" fill="#f0b34c" stroke="#8e5d24" stroke-width="6"/>
+    <path d="M418 279 L447 273 L480 472 L451 477Z" fill="#bc7129" stroke="#8e5d24" stroke-width="6"/>
+    <rect x="403" y="583" width="218" height="68" rx="18" fill="#741d17" stroke="#e2a744" stroke-width="6"/>
+    <path d="M447 617 H577" stroke="#f8d078" stroke-width="7" stroke-linecap="round"/>
+    <path d="M512 595 L523 611 L542 617 L523 624 L512 641 L501 624 L482 617 L501 611Z" fill="#f8d078"/>
+  </g>
+</svg>
