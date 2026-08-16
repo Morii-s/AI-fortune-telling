@@ -4,8 +4,6 @@ Orbit 是一款将每日命理、自省建议与 Apple 健康节律结合的 iOS
 
 ![Orbit 首页](docs/screenshots/orbit-home.png)
 
-![Orbit App Icon](ios/OrbitHealth/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png)
-
 ## 功能
 
 - 离线生成每日命轨、八字、黄历与星座视角的综合解读
