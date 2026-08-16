@@ -1,0 +1,338 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1C4F98A0F8D4C3CB7E9F101 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1C4F98A0F8D4C3CB7E9F100 /* Assets.xcassets */; };
+		21C8B1281899237E2E682CBA /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1230304D22846CAB7764973B /* AppState.swift */; };
+		3BE6AE95CADCC393A568281D /* SignData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953404FD2EF61BF1FE8A9478 /* SignData.swift */; };
+		4FB82BFE69FE3AEF5EA1694B /* FortuneAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5EB2FA73D966A4F7B67DE /* FortuneAPI.swift */; };
+		5A9A59151E49EDE206D1B355 /* OrbitHealthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD75367010DB219F398A73C /* OrbitHealthApp.swift */; };
+		6DDE61100721F18F4D442005 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8105BAC3F870F802BBBFA8 /* ContentView.swift */; };
+		70524B63A52B8A7411CAE7FC /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B38AB12BFED65DE96B7FE18 /* Models.swift */; };
+		8C536A0FFF83A3E2E2609962 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DCC0DFB2130B8765F03C59 /* HealthKitService.swift */; };
+		F87DA6A000F1466FC0D517F0 /* DivinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A2B4E53AE11C3DD919DA69 /* DivinationView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A1C4F98A0F8D4C3CB7E9F100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0B38AB12BFED65DE96B7FE18 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		1230304D22846CAB7764973B /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		69A2B4E53AE11C3DD919DA69 /* DivinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivinationView.swift; sourceTree = "<group>"; };
+		953404FD2EF61BF1FE8A9478 /* SignData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignData.swift; sourceTree = "<group>"; };
+		95F9641222802F15435779A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9CD75367010DB219F398A73C /* OrbitHealthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitHealthApp.swift; sourceTree = "<group>"; };
+		AEA5EB2FA73D966A4F7B67DE /* FortuneAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FortuneAPI.swift; sourceTree = "<group>"; };
+		B765FBB09F9480FCAFA47A35 /* OrbitHealth.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = OrbitHealth.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7DCC0DFB2130B8765F03C59 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		F63C43D7AA9AC23CDB900F9D /* OrbitHealth.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OrbitHealth.entitlements; sourceTree = "<group>"; };
+		FB8105BAC3F870F802BBBFA8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		5F0A6FFA435F90AFBA987008 /* OrbitHealth */ = {
+			isa = PBXGroup;
+			children = (
+				A1C4F98A0F8D4C3CB7E9F100 /* Assets.xcassets */,
+				1230304D22846CAB7764973B /* AppState.swift */,
+				FB8105BAC3F870F802BBBFA8 /* ContentView.swift */,
+				69A2B4E53AE11C3DD919DA69 /* DivinationView.swift */,
+				AEA5EB2FA73D966A4F7B67DE /* FortuneAPI.swift */,
+				B7DCC0DFB2130B8765F03C59 /* HealthKitService.swift */,
+				95F9641222802F15435779A1 /* Info.plist */,
+				0B38AB12BFED65DE96B7FE18 /* Models.swift */,
+				F63C43D7AA9AC23CDB900F9D /* OrbitHealth.entitlements */,
+				9CD75367010DB219F398A73C /* OrbitHealthApp.swift */,
+				953404FD2EF61BF1FE8A9478 /* SignData.swift */,
+			);
+			path = OrbitHealth;
+			sourceTree = "<group>";
+		};
+		7C5119C45146ED5B9BCBB0EB = {
+			isa = PBXGroup;
+			children = (
+				5F0A6FFA435F90AFBA987008 /* OrbitHealth */,
+				8C88EF3B4A94535DD979B012 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8C88EF3B4A94535DD979B012 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B765FBB09F9480FCAFA47A35 /* OrbitHealth.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C29D0825E57F81195616F8AF /* OrbitHealth */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7EC7AB7AE3E260E9653AC263 /* Build configuration list for PBXNativeTarget "OrbitHealth" */;
+			buildPhases = (
+				D1BF381CB65A9782F9A7C8B1 /* Sources */,
+				A1C4F98A0F8D4C3CB7E9F102 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OrbitHealth;
+			packageProductDependencies = (
+			);
+			productName = OrbitHealth;
+			productReference = B765FBB09F9480FCAFA47A35 /* OrbitHealth.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ACA23A15C2E332F6BE38B279 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					C29D0825E57F81195616F8AF = {
+						DevelopmentTeam = V3UKHUP36V;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 651F821D09EB4389E1496436 /* Build configuration list for PBXProject "OrbitHealth" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 7C5119C45146ED5B9BCBB0EB;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 8C88EF3B4A94535DD979B012 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C29D0825E57F81195616F8AF /* OrbitHealth */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1C4F98A0F8D4C3CB7E9F102 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1C4F98A0F8D4C3CB7E9F101 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1BF381CB65A9782F9A7C8B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21C8B1281899237E2E682CBA /* AppState.swift in Sources */,
+				6DDE61100721F18F4D442005 /* ContentView.swift in Sources */,
+				F87DA6A000F1466FC0D517F0 /* DivinationView.swift in Sources */,
+				4FB82BFE69FE3AEF5EA1694B /* FortuneAPI.swift in Sources */,
+				8C536A0FFF83A3E2E2609962 /* HealthKitService.swift in Sources */,
+				70524B63A52B8A7411CAE7FC /* Models.swift in Sources */,
+				5A9A59151E49EDE206D1B355 /* OrbitHealthApp.swift in Sources */,
+				3BE6AE95CADCC393A568281D /* SignData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		46965F9E597A93D54DDF6808 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = OrbitHealth/OrbitHealth.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = V3UKHUP36V;
+				INFOPLIST_FILE = OrbitHealth/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.orbit.health;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		9EC2963EAE799590430E28C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F225BF7E578778E47BE94F05 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = OrbitHealth/OrbitHealth.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = V3UKHUP36V;
+				INFOPLIST_FILE = OrbitHealth/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.orbit.health;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		FB6F20A716BAA7560F657C91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		651F821D09EB4389E1496436 /* Build configuration list for PBXProject "OrbitHealth" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9EC2963EAE799590430E28C1 /* Debug */,
+				FB6F20A716BAA7560F657C91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7EC7AB7AE3E260E9653AC263 /* Build configuration list for PBXNativeTarget "OrbitHealth" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F225BF7E578778E47BE94F05 /* Debug */,
+				46965F9E597A93D54DDF6808 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ACA23A15C2E332F6BE38B279 /* Project object */;
+}

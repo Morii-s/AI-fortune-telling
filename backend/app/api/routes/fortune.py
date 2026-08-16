@@ -21,6 +21,7 @@ async def calculate_daily_fortune(req: BirthFormRequest):
             gender=req.gender,
             birth_place=req.birth_place,
             birth_lat=req.birth_lat,
+            health_summary=req.health_summary.model_dump() if req.health_summary else None,
         )
         return FortuneResponse(data=result)
     except Exception as e:

@@ -45,6 +45,17 @@ def get_today_huangli(date=None):
     try: day_wuxing = eight_char.getDayWuXing()
     except: pass
     xingzuo = solar.getXingZuo()
+    auspicious_hours = []
+    try:
+        for lunar_time in lunar.getTimes():
+            if lunar_time.getTianShenLuck() == "吉":
+                auspicious_hours.append({
+                    "time": f"{lunar_time.getMinHm()}-{lunar_time.getMaxHm()}",
+                    "ganzhi": lunar_time.getGanZhi(),
+                    "yi": list(lunar_time.getYi() or [])[:3],
+                })
+    except Exception:
+        pass
     return {
         'lunar_date': f'{lunar_year}年{lunar_month}{lunar_day}',
         'lunar_year': lunar_year, 'lunar_month': lunar_month, 'lunar_day': lunar_day,
@@ -54,5 +65,6 @@ def get_today_huangli(date=None):
         'chong': chong, 'chong_desc': chong_desc, 'chong_sha': chong_sha,
         'xi_shen': xi_shen, 'fu_shen': fu_shen, 'cai_shen': cai_shen,
         'pengzu': pengzu, 'jianchu': jianchu, 'xingzuo': xingzuo,
+        'auspicious_hours': auspicious_hours,
         'solar_date': f'{date.year}-{date.month:02d}-{date.day:02d}',
     }
