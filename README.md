@@ -2,7 +2,9 @@
 
 Orbit 是一款将每日命理、自省建议与 Apple 健康节律结合的 iOS App。App 名称取自生活轨迹的概念：用当天真实的状态，帮助用户整理下一步行动。
 
-![Orbit 首页](docs/screenshots/orbit-home.png)
+<p align="center">
+  <img src="docs/screenshots/orbit-home.png" alt="Orbit App 首页" width="280">
+</p>
 
 ## 功能
 
